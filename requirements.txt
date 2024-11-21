@@ -1,0 +1,7 @@
+matplotlib
+wordcloud
+pandas
+seaborn
+ucimlrepo
+numpy
+scikit-learn
