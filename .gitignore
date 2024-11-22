@@ -1,1 +1,4 @@
-myenv/
+support2/
+.vscode/
+logs/
+utils/__pycache__/
