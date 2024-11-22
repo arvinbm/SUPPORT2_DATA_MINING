@@ -2,3 +2,7 @@ support2/
 .vscode/
 logs/
 utils/__pycache__/
+plots_heatmap/
+plots_histograms/
+plots_pie_charts/
+plots_wordcounts/
