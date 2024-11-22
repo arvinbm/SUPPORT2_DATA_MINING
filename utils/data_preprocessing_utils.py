@@ -16,7 +16,7 @@ from .logger_utils import setup_logger , save_feature_log , save_dataframe
 
 
 """
-Author: Arvin Bayet Manesh
+Author: Arvin Bayat Manesh
 Created: 2024-11-20
 Last Modified: 2024-11-20
 Description: This script provides a comprehensive preprocessing pipeline for the SUPPORT2 dataset from the UCI Machine Learning Repository. 
@@ -128,7 +128,7 @@ def drop_features_with_too_many_missing_values(X):
     num_columns = X.shape[0]
     dropped_columns = []
 
-    # Iterate through columns and drop those with more than 35% missing values
+    # Iterate through columns and drop those with more than 30% missing values
     for col in missing_values.index:
         if missing_values[col] / num_columns > 0.30:
             dropped_columns.append(col)
@@ -165,7 +165,6 @@ def impute_missing_values(X, y):
 )
 
 
-
 def perform_one_hot_encoding(X):
     """
     Performs one-hot encoding on all non-numeric columns in the DataFrame `X`.
@@ -192,10 +191,8 @@ def perform_one_hot_encoding(X):
     return X
 
 
-
 def perform_z_score_normalization(X):
     return (X - X.mean()) / X.std()
-
 
 
 def handle_missing_values(X, y, log_dir=None, logger=None):
@@ -229,10 +226,22 @@ def process_features(X, log_dir=None, logger=None):
         save_feature_log(numeric_cols, numeric_columns_path, "Numeric columns", logger)
         save_feature_log(categorical_cols, categorical_columns_path, "Categorical columns", logger)
 
-    encoded_categorical_cols = perform_one_hot_encoding(categorical_cols)
-    normalized_numeric_cols = perform_z_score_normalization(numeric_cols)
+    # Exclude the features 'dementia' and 'diabetes' from normalization.
+    # These features are categorical in nature, but in the original dataset
+    # they had numeric values 0 and 1 to describe 'yes' or 'no', thus there 
+    # is no need to normalize these two features.
+    special_numeric_cols = numeric_cols[['dementia', 'diabetes']] if {'dementia', 'diabetes'}.issubset(numeric_cols.columns) else pd.DataFrame()
+    numeric_cols_excluding_special_features = numeric_cols.drop(special_numeric_cols, axis=1)
 
+    encoded_categorical_cols = perform_one_hot_encoding(categorical_cols)
+    normalized_numeric_cols = perform_z_score_normalization(numeric_cols_excluding_special_features)
+
+    # Add the special columns 'diabetes' and 'dementia' to the numeric columns
+    normalized_numeric_cols = pd.concat([normalized_numeric_cols, special_numeric_cols], axis=1)
+
+    # Combine the numerical and encoded categorical features
     processed_features = pd.concat([encoded_categorical_cols, normalized_numeric_cols], axis=1)
+    
     if logger:
         logger.info("Features processed successfully.")
     return processed_features

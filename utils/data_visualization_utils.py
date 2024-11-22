@@ -62,11 +62,6 @@ def plot_and_save_pie_charts(df, categorical_columns, folder_path="plots/pie_cha
             print(f"Column '{col}' not found in the DataFrame.")
 
 
-
-
-
-
-
 def plot_and_save_wordclouds(data, numerical_columns, output_folder):
     
     os.makedirs(output_folder, exist_ok=True)
@@ -100,8 +95,6 @@ def plot_and_save_wordclouds(data, numerical_columns, output_folder):
         plt.close()
         print(f"Word cloud for '{column}' saved at: {plot_path}")
     
-
-
 
 
 def plot_and_save_heatmap(data, output_folder, title="Heatmap", dpi=300):
