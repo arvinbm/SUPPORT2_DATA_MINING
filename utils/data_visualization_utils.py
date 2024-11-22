@@ -1,13 +1,8 @@
 import os
 import matplotlib.pyplot as plt
-from wordcloud import WordCloud
-
 import pandas as pd
-
-
 import seaborn as sns
-
-
+from wordcloud import WordCloud
 
 """
 Author: Amr Sharafeldin
@@ -63,7 +58,6 @@ def plot_and_save_pie_charts(df, categorical_columns, folder_path="plots/pie_cha
 
 
 def plot_and_save_wordclouds(data, numerical_columns, output_folder):
-    
     os.makedirs(output_folder, exist_ok=True)
     
     for column in numerical_columns:
@@ -96,7 +90,6 @@ def plot_and_save_wordclouds(data, numerical_columns, output_folder):
         print(f"Word cloud for '{column}' saved at: {plot_path}")
     
 
-
 def plot_and_save_heatmap(data, output_folder, title="Heatmap", dpi=300):
 
     os.makedirs(output_folder, exist_ok=True)
@@ -118,9 +111,6 @@ def plot_and_save_heatmap(data, output_folder, title="Heatmap", dpi=300):
     plt.savefig(plot_path, dpi=dpi)
     plt.close()
     print(f"Heatmap saved at: {plot_path}")
-
-
-
 
 
 def plot_and_save_histograms(data, output_folder, bins=30, dpi=300):
