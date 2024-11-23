@@ -7,7 +7,7 @@ from utils.data_visualization_utils import *
 from utils.data_preprocessing_utils import import_dataset, split_features_by_type
 
 """
-Author: Amr Sharafeldin
+Author: Arvin Bayat Manesh
 Created: 2024-11-20
 Last Modified: 2024-11-20
 Description: This script contains functions to generate and save various types of visualizations for exploratory data analysis (EDA). 

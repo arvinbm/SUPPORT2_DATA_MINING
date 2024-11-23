@@ -6,3 +6,4 @@ plots_heatmap/
 plots_histograms/
 plots_pie_charts/
 plots_wordcounts/
+__pycache__/
