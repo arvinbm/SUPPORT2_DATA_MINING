@@ -1,24 +1,22 @@
-from ucimlrepo import fetch_ucirepo, list_available_datasets
+import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
 from sklearn import datasets
+from datetime import datetime
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler 
 from pandas.api.types import is_numeric_dtype
-import os
-from datetime import datetime
-
+from ucimlrepo import fetch_ucirepo, list_available_datasets
 from .logger_utils import setup_logger , save_feature_log , save_dataframe
-
-
 
 
 """
 Author: Arvin Bayat Manesh
 Created: 2024-11-20
 Last Modified: 2024-11-20
+
 Description: This script provides a comprehensive preprocessing pipeline for the SUPPORT2 dataset from the UCI Machine Learning Repository. 
 It includes functionalities for importing the dataset, analyzing feature characteristics (e.g., missing values, unique values, and data types), 
 handling missing data through column removal or imputation, encoding categorical variables via one-hot encoding, normalizing numerical features, 
@@ -87,8 +85,6 @@ def get_num_missing_values(X):
     """
     missing_values = X.isnull().sum()
     return missing_values
-
-
 
 
 def split_features_by_type(X):
