@@ -61,3 +61,18 @@ Ensures necessary directories exist for saving visualizations:
 - `plots/histograms`
 
 ---
+
+### 5. Run the data_classification script
+```
+python data_classification.py
+```
+
+Generates and saves multiple types of visualizations:
+- **Roc Curves**:
+  - "./logs/clf/training_results.log"
+- **Confusion Matrcies**:
+  - ./plots/clf/confusion_matrix/
+- **Logs**:
+  - ./logs/clf/training_results.log
+
+
