@@ -2,8 +2,9 @@ import os
 import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
+from sklearn.cluster import DBSCAN
 import matplotlib.pyplot as plt
-
+import numpy as np
 """
 Author: Arvin Bayat Manesh  
 Created: 2024-11-24  
@@ -162,4 +163,79 @@ def plot_wss_vs_clusters(wss_df, wss_vs_clusters_folder):
 
     plt.savefig(plot_path)
     print(f"Plot saved to {plot_path}")
+
+
+
+def perform_dbscan(data, eps=0.5, min_samples=5):
+    """
+    Perform DBSCAN clustering.
+    
+    Parameters:
+    - data: array-like, shape (n_samples, n_features), the input data.
+    - eps: float, the maximum distance between two samples for them to be considered as in the same neighborhood.
+    - min_samples: int, the number of samples in a neighborhood for a point to be considered as a core point.
+
+    Returns:
+    - clustering: DBSCAN object with clustering results.
+    """
+    db = DBSCAN(eps=eps, min_samples=min_samples)
+    clustering = db.fit(data)
+    return clustering
+
+def perform_PCA_DBSCAN(data, clustering):
+    """
+    Reduce data dimensions using PCA for clustering visualization.
+
+    Parameters:
+    - data: array-like, shape (n_samples, n_features), the input data.
+    - clustering: DBSCAN object, the result of the DBSCAN clustering.
+
+    Returns:
+    - reduced_data: array-like, the PCA-reduced data.
+    - core_samples_mask: boolean array, mask of core samples.
+    - cluster_labels: array-like, cluster labels for each point.
+    """
+    pca = PCA(n_components=2)
+    reduced_data = pca.fit_transform(data)
+    
+    core_samples_mask = np.zeros_like(clustering.labels_, dtype=bool)
+    core_samples_mask[clustering.core_sample_indices_] = True
+    cluster_labels = clustering.labels_
+    
+    return reduced_data, core_samples_mask, cluster_labels
+
+def plot_DBSCAN_clustering(reduced_data, core_samples_mask, cluster_labels, output_folder):
+
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    unique_labels = set(cluster_labels)
+    colors = [plt.cm.Spectral(each) for each in np.linspace(0, 1, len(unique_labels))]
+
+    plt.figure(figsize=(10, 7))
+    for k, col in zip(unique_labels, colors):
+        if k == -1:
+            # Black used for noise.
+            col = [0, 0, 0, 1]
+
+        class_member_mask = (cluster_labels == k)
+
+        # Core samples
+        xy = reduced_data[class_member_mask & core_samples_mask]
+        plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=tuple(col), markeredgecolor='k', 
+                 markersize=10, alpha=0.8, label=f"Cluster {k}" if k != -1 else "Noise")
+
+        # Non-core samples
+        xy = reduced_data[class_member_mask & ~core_samples_mask]
+        plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=tuple(col), markeredgecolor='k', 
+                 markersize=6, alpha=0.5)
+
+    plt.title('DBSCAN Clustering Visualization (PCA-reduced)')
+    plt.xlabel('PCA Component 1')
+    plt.ylabel('PCA Component 2')
+    plt.grid(True)
+    plt.legend(loc='best', title="Clusters")
+    plt.savefig(f"{output_folder}/dbscan_clustering_improved.png")
+
+
     
