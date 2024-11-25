@@ -1,0 +1,45 @@
+log_file: "./logs/clf/training_results.log"
+roc_curves_plots_file: "./plots/clf/roc_curves/"
+confusion_matrix_plots_file: "./plots/clf/confusion_matrix/"
+models:
+  decision_tree:
+    criterion: "gini"
+    splitter: "best"
+    max_depth: null
+    min_samples_split: 2
+    random_state: 13
+  svm:
+    kernel: "rbf"
+    C: 1.0
+    gamma: "scale"
+  random_forest:
+    n_estimators: 100
+    min_samples_split: 2
+    max_depth: null
+    random_state: 13
+    n_jobs: -1
+  xgboost:
+    n_estimators: 100
+    max_depth: 6
+    learning_rate: 0.1
+    subsample: 0.8
+    colsample_bytree: 0.8
+    random_state: 13
+    use_label_encoder: false
+    eval_metric: "logloss"
+  xgboost_grid_search_params:
+    n_estimators: [50, 100]
+    max_depth: [3, 5]
+    learning_rate: [0.05, 0.1]
+    subsample: [0.8]
+    colsample_bytree: [0.8]
+    gamma: [0, 0.1]
+    min_child_weight: [1]
+    reg_alpha: [0]
+    reg_lambda: [1]
+    scale_pos_weight: [1]
+    use_gpu: false #Change that to false if your device is not supporting CUDA
+    objective: ["binary:logistic"]
+    eval_metric: ["logloss"]
+  knn:
+    n_neighbors: 10
