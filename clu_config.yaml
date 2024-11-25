@@ -1,0 +1,8 @@
+log_file: "./logs/clustering/clustering.log"
+wss_vs_clusters_folder: "./plots/clustering/wss_vs_clusters"
+kmeans_plot_folder: "./plots/clustering/kmeans"
+dbscan_plot_folder: "./plots/clustering/dbscan"
+
+dbscan_params:
+  eps: 5
+  min_samples: 5
