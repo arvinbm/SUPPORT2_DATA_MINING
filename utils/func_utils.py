@@ -1,4 +1,5 @@
 import pandas as pd
+import yaml
 
 """
 Author: Arvin Bayat Manesh
@@ -52,3 +53,51 @@ def drop_columns(df, columns_to_drop, logger=None):
 
     return df_dropped
 
+
+
+
+# Author: Amr Sharafeldin
+# Created: 2024-11-24
+
+def map_labels(row):
+    """
+    Maps a row of a multi-binary labeled DataFrame to a single class label based on specific conditions.
+
+    Parameters:
+        row (pd.Series): A row from a pandas DataFrame containing multiple binary label columns,
+                         specifically 'death' and 'hospdead'.
+
+    Returns:
+        int: The mapped class label:
+             - 0 if 'death' is 0 (Class 0: No death)
+             - 1 if 'death' is not 0 but 'hospdead' is 0 (Class 1: Non-hospital-related death)
+             - 2 if both 'death' and 'hospdead' are not 0 (Class 2: Hospital-related death)
+
+    Notes:
+        This function is used for reducing multi-binary labels to a single unified class label
+        for classification tasks or other downstream applications.
+    """
+    if row['death'] == 0:
+        return 0  # Class 0: No death
+    elif row['hospdead'] == 0:
+        return 1  # Class 1: Non-hospital-related death
+    else:
+        return 2  # Class 2: Hospital-related death
+
+def load_config(config_path):
+    """
+    Loads a configuration file in YAML format and returns its contents as a Python dictionary.
+
+    Parameters:
+        config_path (str): Path to the YAML configuration file.
+
+    Returns:
+        dict: The parsed configuration data.
+
+    Notes:
+        This function is useful for dynamically configuring a script or model by reading key-value
+        pairs from a YAML configuration file.
+    """
+    with open(config_path, 'r') as file:
+        config = yaml.safe_load(file)  # Safely loads the YAML file, avoiding execution of arbitrary code
+    return config
