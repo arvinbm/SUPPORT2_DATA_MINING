@@ -6,7 +6,7 @@ from sklearn.cluster import DBSCAN
 import matplotlib.pyplot as plt
 import numpy as np
 """
-Author: Arvin Bayat Manesh  
+Author: Arvin Bayat Manesh & Amr Sharafeldin
 Created: 2024-11-24  
 Last Modified: 2024-11-24  
 
@@ -41,7 +41,7 @@ def perform_kmeans(X, num_clusters):
         sklearn.cluster.KMeans: The trained K-Means model containing cluster 
                                 labels, centroids, and other attributes.
     """
-    kmeans = KMeans(n_clusters=num_clusters, random_state=13)
+    kmeans = KMeans(n_clusters=num_clusters, init='k-means++', random_state=13)
     kmeans.fit(X)
     return kmeans
 
@@ -76,7 +76,7 @@ def perform_PCA_KMeans(X, Kmeans):
 
 def plot_KMeans_clustering(reduced_data, Kmeans_labels, Kmeans_centroids_2d, KMeans_plot_folder):
     # Scatter plot of the 2D data
-    plt.figure(figsize=(10, 10))
+    plt.figure(figsize=(8, 6))
     scatter = plt.scatter(
         reduced_data[:, 0], reduced_data[:, 1],
         c=Kmeans_labels, cmap='viridis', s=50, alpha=0.7, label="Data Points"

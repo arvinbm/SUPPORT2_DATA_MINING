@@ -1,0 +1,5 @@
+log_file: "./logs/outlier_detection/outlier_detection.log"
+isolation_forest_folder: "./plots/outlier_detection/isolation_forest"
+
+isolation_forest_params:
+  n_estimators: 1000

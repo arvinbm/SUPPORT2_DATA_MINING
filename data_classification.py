@@ -15,7 +15,6 @@ from utils.data_classification_utils import (
     get_validation_score,
     evaluate_and_plot_confusion_matrix,
     evaluate_and_plot_roc
-
 )
 from utils.logger_utils import setup_logger
 
@@ -30,9 +29,6 @@ It supports multiple models, grid search for hyperparameter tuning, and GPU acce
 """
 
 def main():
-
-
-
 
     # Load config file
     config_path = "clf_config.yaml"

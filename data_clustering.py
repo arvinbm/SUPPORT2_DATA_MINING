@@ -6,7 +6,7 @@ from utils.logger_utils import *
 import logging
 
 """
-Author: Arvin Bayat Manesh  
+Author: Arvin Bayat Manesh & Amr Sharafeldin
 Created: 2024-11-24 
 Last Modified: 2024-11-24  
 
@@ -20,7 +20,6 @@ The functionalities include:
 - DBSCAN clustering with configurable parameters.
 - PCA for visualization of clusters in 2D.
 - Saving plots of clustering results and metrics.
-
 """
 
 # Load config file
@@ -34,9 +33,7 @@ log_file = config["log_file"]
 # Load and preprocess data
 processed_data, y = get_processed_data(log_file)
 
-
 logger = setup_logger(log_file)
-
 
 folders = [
     config["wss_vs_clusters_folder"],
@@ -45,8 +42,6 @@ folders = [
 ]
 for folder in folders:
     os.makedirs(folder, exist_ok=True)
-
-
 
 # K-Means Clustering
 logging.info("Starting K-Means clustering.")

@@ -9,3 +9,4 @@ plots_wordcounts/
 __pycache__/
 KMeans_clustering_plot/
 wss_vs_clusters/
+plots/
