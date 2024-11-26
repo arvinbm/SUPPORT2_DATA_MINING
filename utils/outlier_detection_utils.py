@@ -31,22 +31,8 @@ def perform_pca(X):
     return reduced_2d_dataset
 
 def plot_isolation_forest_results(predictions, reduced_3d_dataset, isolation_forest_folder):
-    # plt.figure(figsize=(8, 6))
-    # plt.scatter(reduced_2d_dataset[predictions == 1, 0], reduced_2d_dataset[predictions == 1, 1], c='blue', label='Inliers', alpha=0.5)
-    # plt.scatter(reduced_2d_dataset[predictions == -1, 0], reduced_2d_dataset[predictions == -1, 1], c='red', label='Outliers', alpha=0.5)
-
-    # plt.title("Isolation Forest: Outlier Detection Visualization (PCA-Reduced Data)")
-    # plt.xlabel("Principal Component 1")
-    # plt.ylabel("Principal Component 2")
-    # plt.legend()
-    # plt.grid(True)
-
-    # # Save the graph
-    # plot_path = os.path.join(isolation_forest_folder, "isolation_forest.png")
-    # plt.savefig(plot_path)
-    # plt.close()
     # print(f"Plot saved to {plot_path}")
-        # Create a 3D scatter plot
+    # Create a 3D scatter plot
     fig = plt.figure(figsize=(10, 8))
     ax = fig.add_subplot(111, projection='3d')
 
@@ -72,6 +58,5 @@ def plot_isolation_forest_results(predictions, reduced_3d_dataset, isolation_for
     # Save the plot
     plot_path = os.path.join(isolation_forest_folder, "isolation_forest_3d.png")
     plt.savefig(plot_path)
-    plt.show()
     plt.close()
     print(f"3D Plot saved to {plot_path}")

@@ -54,13 +54,13 @@ logger.info(f"Performing K-Means clustering with {num_clusters} clusters.")
 KMeans = perform_kmeans(processed_data, num_clusters)
 
 logger.info("Reducing dimensions using PCA for K-Means visualization.")
-reduced_data_kmeans, centroids_2d = perform_PCA_KMeans(processed_data, KMeans)
+reduced_data_kmeans, centroids_3d = perform_PCA_KMeans(processed_data, KMeans)
 
 logger.info("Visualizing K-Means clustering.")
 plot_KMeans_clustering(
     reduced_data_kmeans, 
     KMeans.labels_, 
-    centroids_2d, 
+    centroids_3d, 
     config["kmeans_plot_folder"]
 )
 

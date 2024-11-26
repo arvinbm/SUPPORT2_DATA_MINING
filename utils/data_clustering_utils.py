@@ -52,7 +52,7 @@ def perform_PCA_KMeans(X, Kmeans):
     the dimensions of K-Means centroids for consistent visualization.
 
     This function applies Principal Component Analysis (PCA) to reduce the 
-    dimensions of the input dataset `X` to two dimensions for 2D visualization. 
+    dimensions of the input dataset `X` to two dimensions for 3D visualization. 
     It also transforms the K-Means centroids into the same PCA-reduced space, 
     ensuring the centroids can be plotted alongside the data points.
 
@@ -66,40 +66,48 @@ def perform_PCA_KMeans(X, Kmeans):
             - reduced_data: The dataset reduced to two dimensions by PCA. Shape: (n_samples, 2).
             - centroids_2d: The centroids transformed into the same PCA-reduced 2D space. Shape: (n_clusters, 2).
     """
-    pca = PCA(n_components=2)
+    pca = PCA(n_components=3)
     reduced_data = pca.fit_transform(X)
 
     # Reduce the centroids dimensions to be plotted with data
     centroids_df = pd.DataFrame(Kmeans.cluster_centers_, columns=X.columns)
-    centroids_2d = pca.transform(centroids_df)
+    centroids_3d = pca.transform(centroids_df)
 
-    return reduced_data, centroids_2d
+    return reduced_data, centroids_3d
 
-def plot_KMeans_clustering(reduced_data, Kmeans_labels, Kmeans_centroids_2d, KMeans_plot_folder):
-    # Scatter plot of the 2D data
-    plt.figure(figsize=(8, 6))
-    scatter = plt.scatter(
-        reduced_data[:, 0], reduced_data[:, 1],
+def plot_KMeans_clustering(reduced_data, Kmeans_labels, Kmeans_centroids_3d, KMeans_plot_folder):
+    # Create a 3D scatter plot
+    fig = plt.figure(figsize=(10, 8))
+    ax = fig.add_subplot(111, projection='3d')
+
+    # Scatter plot of the data points
+    scatter = ax.scatter(
+        reduced_data[:, 0], reduced_data[:, 1], reduced_data[:, 2],
         c=Kmeans_labels, cmap='viridis', s=50, alpha=0.7, label="Data Points"
     )
 
     # Plot the centroids
-    plt.scatter(
-            Kmeans_centroids_2d[:, 0], Kmeans_centroids_2d[:, 1],
-            c='red', marker='X', s=200, label="Centroids"
+    ax.scatter(
+        Kmeans_centroids_3d[:, 0], Kmeans_centroids_3d[:, 1], Kmeans_centroids_3d[:, 2],
+        c='red', marker='X', s=200, label="Centroids"
     )
 
-    plt.title("K-Means Clustering Visualization", fontsize=14)
-    plt.xlabel("Principal Component 1")
-    plt.ylabel("Principal Component 2")
-    plt.colorbar(scatter, label="Cluster Label")
-    plt.legend()
-    plt.grid(True)
+    # Set plot labels and title
+    ax.set_title("K-Means Clustering Visualization (3D)", fontsize=14)
+    ax.set_xlabel("Principal Component 1")
+    ax.set_ylabel("Principal Component 2")
+    ax.set_zlabel("Principal Component 3")
 
-    plot_path = os.path.join(KMeans_plot_folder, "KMeans_Clustering.png")
+    # Add colorbar and legend
+    cbar = fig.colorbar(scatter, ax=ax, pad=0.1)
+    cbar.set_label("Cluster Label")
+    ax.legend()
+
+    # Save the plot
+    plot_path = os.path.join(KMeans_plot_folder, "KMeans_Clustering_3D.png")
     plt.savefig(plot_path)
     plt.close()
-    print(f"Plot saved to {plot_path}")
+    print(f"3D Plot saved to {plot_path}")
 
 def perform_elbow_method(X):
     """
@@ -215,7 +223,7 @@ def perform_PCA_DBSCAN(data, clustering):
     - core_samples_mask: boolean array, mask of core samples.
     - cluster_labels: array-like, cluster labels for each point.
     """
-    pca = PCA(n_components=2)
+    pca = PCA(n_components=3)
     reduced_data = pca.fit_transform(data)
     
     core_samples_mask = np.zeros_like(clustering.labels_, dtype=bool)
@@ -225,37 +233,48 @@ def perform_PCA_DBSCAN(data, clustering):
     return reduced_data, core_samples_mask, cluster_labels
 
 def plot_DBSCAN_clustering(reduced_data, core_samples_mask, cluster_labels, output_folder):
-
-    import numpy as np
-    import matplotlib.pyplot as plt
-
     unique_labels = set(cluster_labels)
     colors = [plt.cm.Spectral(each) for each in np.linspace(0, 1, len(unique_labels))]
 
-    plt.figure(figsize=(10, 7))
+    # Create 3D plot
+    fig = plt.figure(figsize=(12, 8))
+    ax = fig.add_subplot(111, projection='3d')
+
     for k, col in zip(unique_labels, colors):
         if k == -1:
-            # Black used for noise.
+            # Black used for noise
             col = [0, 0, 0, 1]
 
         class_member_mask = (cluster_labels == k)
 
         # Core samples
-        xy = reduced_data[class_member_mask & core_samples_mask]
-        plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=tuple(col), markeredgecolor='k', 
-                 markersize=10, alpha=0.8, label=f"Cluster {k}" if k != -1 else "Noise")
+        xyz = reduced_data[class_member_mask & core_samples_mask]
+        ax.scatter(
+            xyz[:, 0], xyz[:, 1], xyz[:, 2], 
+            c=[col], s=50, alpha=0.8, edgecolors='k', label=f"Cluster {k}" if k != -1 else "Noise"
+        )
 
         # Non-core samples
-        xy = reduced_data[class_member_mask & ~core_samples_mask]
-        plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=tuple(col), markeredgecolor='k', 
-                 markersize=6, alpha=0.5)
+        xyz = reduced_data[class_member_mask & ~core_samples_mask]
+        ax.scatter(
+            xyz[:, 0], xyz[:, 1], xyz[:, 2], 
+            c=[col], s=20, alpha=0.5, edgecolors='k'
+        )
 
-    plt.title('DBSCAN Clustering Visualization (PCA-reduced)')
-    plt.xlabel('PCA Component 1')
-    plt.ylabel('PCA Component 2')
-    plt.grid(True)
-    plt.legend(loc='best', title="Clusters")
-    plt.savefig(f"{output_folder}/dbscan_clustering_improved.png")
+    # Set plot labels and title
+    ax.set_title('DBSCAN Clustering Visualization (3D)', fontsize=14)
+    ax.set_xlabel('PCA Component 1')
+    ax.set_ylabel('PCA Component 2')
+    ax.set_zlabel('PCA Component 3')
+
+    # Add legend
+    ax.legend(loc='best', title="Clusters")
+
+    # Save the plot
+    plot_path = f"{output_folder}/dbscan_clustering_3d.png"
+    plt.savefig(plot_path)
+    plt.close()
+    print(f"3D DBSCAN clustering plot saved to {plot_path}")
 
 
 def evaluate_clustering_using_silhouette_scores(models_to_be_evaluated, data, logger):
