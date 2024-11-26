@@ -54,3 +54,4 @@ reduced_2d_dataset = perform_pca(processed_data)
 logger.info("Plotting the results of the isolation forest outlier detection methods")
 plot_isolation_forest_results(isolation_forest_predictions, reduced_2d_dataset, config["isolation_forest_folder"])
 
+logger.info("Outlier detection script executed successfully. Logs saved in the specified folder.")

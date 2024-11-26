@@ -44,19 +44,19 @@ for folder in folders:
     os.makedirs(folder, exist_ok=True)
 
 # K-Means Clustering
-logging.info("Starting K-Means clustering.")
+logger.info("Starting K-Means clustering.")
 wss_df = perform_elbow_method(processed_data)
-logging.info("Elbow method completed. Saving WSS vs. Clusters plot.")
+logger.info("Elbow method completed. Saving WSS vs. Clusters plot.")
 plot_wss_vs_clusters(wss_df, config["wss_vs_clusters_folder"])
 
-num_clusters = 4  # Chosen based on the elbow method plot (can be updated dynamically)
-logging.info(f"Performing K-Means clustering with {num_clusters} clusters.")
+num_clusters = 2  # Chosen based on the elbow method plot (can be updated dynamically)
+logger.info(f"Performing K-Means clustering with {num_clusters} clusters.")
 KMeans = perform_kmeans(processed_data, num_clusters)
 
-logging.info("Reducing dimensions using PCA for K-Means visualization.")
+logger.info("Reducing dimensions using PCA for K-Means visualization.")
 reduced_data_kmeans, centroids_2d = perform_PCA_KMeans(processed_data, KMeans)
 
-logging.info("Visualizing K-Means clustering.")
+logger.info("Visualizing K-Means clustering.")
 plot_KMeans_clustering(
     reduced_data_kmeans, 
     KMeans.labels_, 
@@ -65,18 +65,18 @@ plot_KMeans_clustering(
 )
 
 # DBSCAN Clustering
-logging.info("Starting DBSCAN clustering.")
+logger.info("Starting DBSCAN clustering.")
 dbscan_params = config.get("dbscan_params", {"eps": 0.5, "min_samples": 5})
-logging.info(f"DBSCAN parameters: {dbscan_params}")
+logger.info(f"DBSCAN parameters: {dbscan_params}")
 DBSCAN_clustering = perform_dbscan(processed_data, **dbscan_params)
 
-logging.info("Reducing dimensions using PCA for DBSCAN visualization.")
+logger.info("Reducing dimensions using PCA for DBSCAN visualization.")
 reduced_data_dbscan, core_samples_mask, cluster_labels = perform_PCA_DBSCAN(
     processed_data, 
     DBSCAN_clustering
 )
 
-logging.info("Visualizing DBSCAN clustering.")
+logger.info("Visualizing DBSCAN clustering.")
 plot_DBSCAN_clustering(
     reduced_data_dbscan, 
     core_samples_mask, 
@@ -84,4 +84,10 @@ plot_DBSCAN_clustering(
     config["dbscan_plot_folder"]
 )
 
-logging.info("Clustering script completed successfully.")
+# Evaluate the clustering performance using the Silhouette scores
+logger.info("Extracting the silhouette scores for clustering models.")
+models_to_be_evaluated = [KMeans, DBSCAN_clustering]
+results = evaluate_clustering_using_silhouette_scores(models_to_be_evaluated, processed_data, logger)
+
+logger.info("Clustering script completed successfully.")
+print("Data clustering executed successfully. Logs saved in the specified log folder.")

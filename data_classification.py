@@ -125,6 +125,7 @@ def main():
     logger.info("==========================================")
 
     logger.info("All models training, cross-validation, and evaluation completed.")
+    print("All models training, cross-validation, and evaluation completed. Logs saved in the specified log folder.")
 
 if __name__ == "__main__":
     main()

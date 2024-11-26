@@ -4,6 +4,7 @@ from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 from sklearn.cluster import DBSCAN
 import matplotlib.pyplot as plt
+from sklearn.metrics import silhouette_score
 import numpy as np
 """
 Author: Arvin Bayat Manesh & Amr Sharafeldin
@@ -238,4 +239,27 @@ def plot_DBSCAN_clustering(reduced_data, core_samples_mask, cluster_labels, outp
     plt.savefig(f"{output_folder}/dbscan_clustering_improved.png")
 
 
-    
+def evaluate_clustering_using_silhouette_scores(models_to_be_evaluated, data, logger):
+    results = {}
+
+    for model in models_to_be_evaluated:
+        model_name = type(model).__name__
+        
+        labels = model.labels_ if hasattr(model, 'labels_') else model.predict(data)
+        if len(set(labels)) > 1:
+            silhouette_avg = silhouette_score(data, labels)
+            logger.info("====================================")
+            logger.info(f"Silhouette Score for {model_name}: {silhouette_avg:.4f}")
+        else:
+            silhouette_avg = None
+            logger.info("====================================")
+            logger.warning(f"Silhouette Score for {model_name} is not applicable (only one cluster found).")
+
+        # Store the results
+        results[model_name] = {
+            "silhouette_score": silhouette_avg,
+            "model": model
+        }
+        
+    logger.info("====================================")
+    return results
