@@ -64,6 +64,11 @@ plot_KMeans_clustering(
     config["kmeans_plot_folder"]
 )
 
+# Perform grid search for hyper tuning DBSCAN parameters
+# best_score, best_params = perform_grid_search(processed_data, logger) # The best parameters are used in clu_config.yaml for DBSCAN
+# print(best_score)
+# print(best_params)
+
 # DBSCAN Clustering
 logger.info("Starting DBSCAN clustering.")
 dbscan_params = config.get("dbscan_params", {"eps": 0.5, "min_samples": 5})

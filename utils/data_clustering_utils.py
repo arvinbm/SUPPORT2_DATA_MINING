@@ -165,6 +165,25 @@ def plot_wss_vs_clusters(wss_df, wss_vs_clusters_folder):
     plt.savefig(plot_path)
     print(f"Plot saved to {plot_path}")
 
+def perform_grid_search(data, logger):
+    eps_values = np.arange(10, 13, 0.5)
+    min_samples_values = range(10, 20)
+    best_params = {}
+    best_score = 0
+
+    for eps in eps_values:
+        for min_samples in min_samples_values:
+            dbscan = DBSCAN(eps=eps, min_samples=min_samples)
+            labels = dbscan.fit_predict(data)
+
+        # Ignore configurations where all points are noise
+        if len(set(labels)) > 1:
+            score = silhouette_score(data, labels)
+            if score > best_score:
+                best_score = score
+                best_params = {'eps': eps, 'min_samples': min_samples}
+
+    return best_score, best_params
 
 
 def perform_dbscan(data, eps=0.5, min_samples=5):
@@ -260,6 +279,6 @@ def evaluate_clustering_using_silhouette_scores(models_to_be_evaluated, data, lo
             "silhouette_score": silhouette_avg,
             "model": model
         }
-        
+
     logger.info("====================================")
     return results
