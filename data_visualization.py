@@ -38,6 +38,7 @@ numeric_cols, categorical_cols = split_features_by_type(X)
 processed_data, labels = get_processed_data(log_file = None)
 # Perform the data visualization
 plot_and_save_pie_charts(X, categorical_cols, plots_pie_charts_folder)
+plot_and_save_pie_charts(labels, ['class'], plots_pie_charts_folder)
 plot_and_save_wordclouds(X, numeric_cols, plots_wordclouds_folder)
 plot_and_save_heatmap(processed_data, plots_heatmap_folder)
 plot_and_save_histograms(X, plots_histogram_folder)
