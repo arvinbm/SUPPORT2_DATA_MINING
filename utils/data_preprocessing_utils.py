@@ -9,7 +9,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler 
 from pandas.api.types import is_numeric_dtype
 from ucimlrepo import fetch_ucirepo, list_available_datasets
+from sklearn.preprocessing import LabelEncoder
 from .logger_utils import setup_logger , save_feature_log , save_dataframe
+from .func_utils import map_labels
 
 
 """
@@ -253,6 +255,7 @@ def data_preprocessing(X, y, log_path=None, enable_logging=True):
 
     if logger:
         execution_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        logger.info("==========================================")
         logger.info(f"Execution started at: {execution_time}")
 
     handle_missing_values(X, y, log_path if enable_logging else None, logger)
@@ -265,3 +268,28 @@ def data_preprocessing(X, y, log_path=None, enable_logging=True):
 
 
 
+
+
+
+def process_labels(y, log_file=None):
+    """
+    Processes the labels by mapping and encoding them.
+
+    Parameters:
+        y (DataFrame): The input dataframe containing the labels 'death' and 'hospdead'.
+        log_file (str, optional): File path to log processing information (currently unused in this function).
+
+    Returns:
+        DataFrame: A dataframe with the original 'class' and its encoded version.
+    """
+    # Select the columns used for labels
+    selected_columns_for_labels = y[['death', 'hospdead']].copy()
+
+    # Apply the custom label mapping function
+    selected_columns_for_labels['class'] = selected_columns_for_labels.apply(map_labels, axis=1)
+
+    # Add an encoded column for the class
+    label_encoder = LabelEncoder()
+    selected_columns_for_labels['class_encoded'] = label_encoder.fit_transform(selected_columns_for_labels['class'])
+
+    return selected_columns_for_labels

@@ -1,7 +1,7 @@
 import os
 import pandas as pd
-from utils.data_preprocessing_utils import import_dataset, data_preprocessing
-
+from utils.data_preprocessing_utils import import_dataset, data_preprocessing , process_labels
+from sklearn.preprocessing import LabelEncoder
 def get_processed_data(log_file):
     """
     Runs the data preprocessing pipeline and returns the processed data.
@@ -23,5 +23,7 @@ def get_processed_data(log_file):
 
     # Perform data preprocessing, passing the log file for logging
     processed_data = data_preprocessing(X, y, log_file)
+    labels = process_labels(y)
 
-    return processed_data, y
+    
+    return processed_data, labels

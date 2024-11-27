@@ -1,5 +1,7 @@
 import pandas as pd
 from sklearn.feature_selection import mutual_info_classif
+import os
+import matplotlib.pyplot as plt
 
 import yaml
 
@@ -80,11 +82,11 @@ def map_labels(row):
         for classification tasks or other downstream applications.
     """
     if row['death'] == 0:
-        return 0  # Class 0: No death
+        return 'alive'  # Class 0: No death
     elif row['hospdead'] == 0:
-        return 1  # Class 1: Non-hospital-related death
+        return 'non-hospital-death'  # Class 1: Non-hospital-related death
     else:
-        return 2  # Class 2: Hospital-related death
+        return 'hospital-deaths'  # Class 2: Hospital-related death
 
 def load_config(config_path):
     """
@@ -144,18 +146,71 @@ def compute_and_mutual_information(X, y, random_state=42, plot=False):
 
 
 
-def plot_mutual_information(feature_importance):
+def plot_mutual_information(feature_importance, output_folder, output_filename="mutual_information_scores.png"):
     """
-    Plots a histogram of mutual information scores.
+    Creates a bar plot of mutual information scores and saves it to the specified output folder.
 
     Parameters:
         feature_importance (pd.DataFrame): DataFrame with feature names and mutual information scores.
+        output_folder (str): Path to the folder where the plot will be saved.
+        output_filename (str): Name of the output file (default is 'mutual_information_scores.png').
     """
+    # Ensure the output folder exists
+    os.makedirs(output_folder, exist_ok=True)
+    
+    # Create the plot
     plt.figure(figsize=(10, 6))
-    plt.bar(feature_importance["Feature"], feature_importance["Mutual Information"], width=0.5)
+    plt.bar(feature_importance["Feature"], feature_importance["Mutual Information"], width=0.5, color='skyblue')
     plt.xlabel("Features")
     plt.ylabel("Mutual Information Score")
     plt.title("Mutual Information Scores for Features")
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
-    plt.show()
+
+    # Save the plot to the specified file
+    output_path = os.path.join(output_folder, output_filename)
+    plt.savefig(output_path)
+    plt.close()
+    print(f"Mutual Information plot saved to {output_path}")
+
+
+
+
+def plot_mutual_information_heatmap(X, y, output_folder, output_filename="mutual_information_heatmap.png"):
+    """
+    Computes mutual information between features and class labels, and plots a heatmap.
+
+    Parameters:
+        X (pd.DataFrame): DataFrame containing the features.
+        y (pd.Series or np.array): Target class labels.
+        output_folder (str): Path to the folder where the plot will be saved.
+        output_filename (str): Name of the output file (default is 'mutual_information_heatmap.png').
+    """
+    # Ensure the output folder exists
+    os.makedirs(output_folder, exist_ok=True)
+
+    # Compute mutual information
+    mi_scores = mutual_info_classif(X, y, discrete_features=True)
+
+    # Create a DataFrame for plotting
+    mi_df = pd.DataFrame({
+        "Feature": X.columns,
+        "Mutual Information": mi_scores
+    }).sort_values(by="Mutual Information", ascending=False)
+
+    # Create a heatmap-style DataFrame
+    heatmap_data = mi_df.set_index("Feature").T
+
+    # Plot the heatmap
+    plt.figure(figsize=(12, 6))
+    sns.heatmap(heatmap_data, annot=True, fmt=".2f", cmap="Blues", cbar_kws={'label': 'Mutual Information'})
+    plt.title("Mutual Information Heatmap")
+    plt.xlabel("Features")
+    plt.ylabel("Mutual Information Score")
+    plt.tight_layout()
+
+    # Save the heatmap to the specified file
+    output_path = os.path.join(output_folder, output_filename)
+    plt.savefig(output_path)
+    plt.close()
+    print(f"Mutual Information heatmap saved to {output_path}")

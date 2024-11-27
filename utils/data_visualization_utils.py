@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 from wordcloud import WordCloud
+from sklearn.preprocessing import OneHotEncoder
 
 """
 Author: Amr Sharafeldin
@@ -130,3 +131,6 @@ def plot_and_save_histograms(data, output_folder, bins=30, dpi=300):
         plt.savefig(plot_path, dpi=dpi)
         plt.close()
         print(f"Histogram saved for {column} at: {plot_path}")
+
+
+

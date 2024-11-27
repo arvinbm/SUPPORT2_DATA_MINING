@@ -13,6 +13,8 @@ from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report
+from sklearn.naive_bayes import GaussianNB
+
 from sklearn.svm import SVC
 from sklearn.metrics import roc_curve, auc , accuracy_score
 
@@ -22,6 +24,9 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import cross_val_score
 
 from .func_utils import map_labels
+
+
+from sklearn.multiclass import OneVsRestClassifier
 """
 Author: Arvin Bayat Manesh (split_to_train_test_dataset , train_SVM_model , train_random_forest )
 Author: Amr Sharafeldin (train_decision_tree , train_xgboost_model  , xgboos grid search )
@@ -42,16 +47,8 @@ The script leverages scikit-learn's machine learning library and supports parall
 
 def split_to_train_test_dataset(X, y):
 
-
-    ### I solved the multi classfication bug here but this might need furthur refactoring
-    selected_columns_for_labels = y[['death', 'hospdead']]
-    selected_columns_for_labels['class'] = selected_columns_for_labels.apply(map_labels, axis=1)
-    selected_columns_for_labels = selected_columns_for_labels.drop(['death', 'hospdead'], axis=1)
-    ###
-
-
-    X_train, X_test, y_train, y_test = train_test_split(X, selected_columns_for_labels,
-                                                        test_size=0.20, random_state=13, stratify=selected_columns_for_labels)
+    X_train, X_test, y_train, y_test = train_test_split(X, y,
+                                                        test_size=0.20, random_state=13, stratify=y)
 
     return X_train, X_test, y_train, y_test
 
@@ -76,29 +73,34 @@ def train_decision_tree(X_train, y_train, params):
 
     return dt_model, train_score, cross_val_scores
 
-
+#https://scikit-learn.org/1.5/modules/generated/sklearn.multiclass.OneVsRestClassifier.html
 def train_SVM_model(X_train, y_train, params):
 
     svm_model = SVC(
         kernel=params.get('kernel', 'rbf'),
         C=params.get('C', 1.0),
         gamma=params.get('gamma', 'scale'),
-        probability=True
+        probability=True,
+        class_weight=params.get('class_weight', None)  # Handle class imbalance
     )
-    cross_val_scores = cross_val_score(svm_model, X_train, y_train, cv=params.get('cv', 5), scoring='accuracy')
-    svm_model.fit(X_train, y_train)
+    ovr_model = OneVsRestClassifier(svm_model)
+    cross_val_scores = cross_val_score(ovr_model, X_train, y_train, cv=params.get('cv', 5), scoring='accuracy')
+    ovr_model.fit(X_train, y_train)
 
-    y_train_pred = svm_model.predict(X_train)
+    y_train_pred = ovr_model.predict(X_train)
 
     train_score = accuracy_score(y_train, y_train_pred)
 
-    return svm_model, train_score, cross_val_scores
+    return ovr_model, train_score, cross_val_scores
 
 
 
 def train_knn_model(X_train, y_train, params):
 
-    knn_clf = KNeighborsClassifier(n_neighbors=params.get('n_neighbors', 10))
+    knn_clf = KNeighborsClassifier(
+    n_neighbors=params.get('n_neighbors', 5),
+    metric=params.get('metric', 'minkowski')  # Default is 'minkowski'
+)
     cross_val_scores = cross_val_score(knn_clf, X_train, y_train, cv=params.get('cv', 5), scoring='accuracy')
     knn_clf.fit(X_train, y_train)
 
@@ -109,6 +111,26 @@ def train_knn_model(X_train, y_train, params):
 
 
 
+def train_naive_bayes(X_train, y_train, params):
+    # Initialize Gaussian Naive Bayes model
+    nb_model = GaussianNB(
+        var_smoothing=params.get('var_smoothing', 1e-9)  # Add var_smoothing as the main parameter
+    )
+    
+    # Perform cross-validation
+    cross_val_scores = cross_val_score(nb_model, X_train, y_train, cv=params.get('cv', 5), scoring='accuracy')
+    
+    # Fit the model
+    nb_model.fit(X_train, y_train)
+    
+    # Predict on training data
+    y_train_pred = nb_model.predict(X_train)
+    
+    # Calculate training accuracy
+    train_score = accuracy_score(y_train, y_train_pred)
+    
+    return nb_model, train_score, cross_val_scores
+
 
 def train_random_forest(X_train, y_train, params):
 
@@ -117,7 +139,8 @@ def train_random_forest(X_train, y_train, params):
         min_samples_split=params.get('min_samples_split', 2),
         max_depth=params.get('max_depth', None),
         random_state=params.get('random_state', 13),
-        n_jobs=params.get('n_jobs', -1)
+        n_jobs=params.get('n_jobs', -1),
+        verbose=params.get('verbose', 1)  # Add verbose with a default value of 0
     )
     cross_val_scores = cross_val_score(rf_model, X_train, y_train, cv=params.get('cv', 5), scoring='accuracy')
     rf_model.fit(X_train, y_train)
@@ -140,7 +163,8 @@ def train_xgboost_model(X_train, y_train, params):
         colsample_bytree=params.get('colsample_bytree', 0.8),
         random_state=params.get('random_state', 13),
         use_label_encoder=params.get('use_label_encoder', False),
-        eval_metric=params.get('eval_metric', 'logloss')
+        eval_metric=params.get('eval_metric', 'logloss'),
+        verbosity=params.get('verbosity', 1)  
     )
     cross_val_scores = cross_val_score(xgb_model, X_train, y_train, cv=params.get('cv', 5), scoring='accuracy')
     xgb_model.fit(X_train, y_train)
