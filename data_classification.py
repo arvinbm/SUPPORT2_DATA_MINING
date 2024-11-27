@@ -5,19 +5,7 @@ import logging
 import argparse
 
 from data_preprocessing import get_processed_data
-from utils.data_classification_utils import (
-    split_to_train_test_dataset,
-    train_decision_tree,
-    train_SVM_model,
-    train_random_forest,
-    train_xgboost_model,
-    train_knn_model,
-    train_naive_bayes,
-    grid_search_xgboost,
-    get_validation_score,
-    evaluate_and_plot_confusion_matrix,
-    evaluate_and_plot_roc
-)
+from utils.data_classification_utils import*
 from utils.logger_utils import setup_logger
 from utils.func_utils import compute_and_mutual_information
 
@@ -101,6 +89,9 @@ def main(mode, number_of_features):
 
         validation_score = get_validation_score(model, X_test, y_test)
         logger.info(f"Validation Score for {model_name}: {validation_score:.4f}")
+
+        # Log the classification report
+        log_classification_report(model, X_test, y_test, logger)
 
         evaluate_and_plot_confusion_matrix(
             model, X_test, y_test, model_name.replace(" ", "_"), confusion_matrix_file

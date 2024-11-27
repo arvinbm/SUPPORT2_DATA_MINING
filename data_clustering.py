@@ -21,7 +21,7 @@ The functionalities include:
 - PCA for visualization of clusters in 2D.
 - Saving plots of clustering results and metrics.
 """
-
+print("Starting Data Clustering script...")
 # Load config file
 config_path = "clu_config.yaml"
 with open(config_path, 'r') as file:

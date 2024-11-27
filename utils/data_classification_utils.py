@@ -218,12 +218,18 @@ def grid_search_xgboost(X_train, y_train, param_grid, cv=5, scoring='accuracy', 
 def get_validation_score(model, X_test, y_test):
     return model.score(X_test, y_test)
 
-def print_classification_report(model, X_test, y_test):
+def log_classification_report(model, X_test, y_test, logger):
+    """
+    Generate and log the classification report for the given model.
+    """
     # Make predictions using the model
     y_pred = model.predict(X_test)
 
-    # Print the report
-    print(classification_report(y_pred, y_test, zero_division=0))
+    # Generate the report
+    report = classification_report(y_test, y_pred, zero_division=0)
+
+    # Log the report
+    logger.info(f"Classification Report:\n{report}")
 
 
 
