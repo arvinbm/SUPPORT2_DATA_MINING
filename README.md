@@ -7,6 +7,7 @@ This repository provides a comprehensive data preprocessing pipeline for the SUP
 ## Instructions to Run the SUPPORT2 Data Preprocessing Pipeline
 
 ### 1. Setting Up a Virtual Environment
+---
 ```
 python -m venv support2
 source support2/bin/activate  # On Linux/Mac
@@ -15,12 +16,13 @@ support2\Scripts\activate     # On Windows
 
 
 ### 2. Installing Required Dependencies
-
+---
 ```
 pip install -r requirements.txt
 ```
 
 ### 3. Running the Preprocessing Script
+---
 ```
 python data_preprocessing.py
 ```
@@ -60,6 +62,7 @@ python data_preprocessing.py
   - Special handling for features like diabetes and dementia that require no normalization.
 
 ### 4. Running the Generate Visualization Script (Exploratory Data Analysis)
+---
 ```
 python data_visualization.py
 ```
@@ -90,6 +93,7 @@ Ensures necessary directories exist for saving visualizations:
 - `plots/histograms`
 
 ### 5. Running the data_classification script
+---
 ```
 python data_classification.py
 ```
@@ -108,6 +112,7 @@ python data_classification.py
   - File Location: "./logs/clf/training_results.log"
 
 ### 6. Running the data_clustering script
+---
 ```
 python data_clustering.py
 ```
@@ -134,6 +139,7 @@ python data_clustering.py
   - File Location: "./logs/clustering_results.log"
 
 ### 7. Running the outlier_detection script
+---
 ```
 python outlier_detection.py
 ```
