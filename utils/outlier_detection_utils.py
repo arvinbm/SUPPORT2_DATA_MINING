@@ -1,5 +1,7 @@
 import os
 from sklearn.ensemble import IsolationForest
+from sklearn.covariance import EllipticEnvelope
+
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 
