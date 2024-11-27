@@ -165,8 +165,19 @@ python outlier_detection.py
 ## Data Classification
 ### SVM (Radial Basis Function kernel)
 #### ROC for SVM
-<img src="./GitHub_Media/SVM_roc.png" alt="ROC for SVM" width="400">
+<table>
+  <tr>
+    <td>
+      <img src="./GitHub_Media/SVM_roc.png" alt="ROC for SVM" width="400">
+    </td>
+    <td>
+      This is the ROC curve for the SVM model. It shows the trade-off between sensitivity and specificity.
+    </td>
+  </tr>
+</table>
+
 ### Random Forest
+
 ### K-Nearest Neighbors
 ### XGBoost
 ### Grid Search
