@@ -192,7 +192,7 @@ This section compares the performance of **XGBoost** against two neural network-
 2. **Neural Oblivious Decision Ensembles (NODE)**
 
 The goal is to determine whether XGBoost remains a superior model for tabular data or if deep learning methods can outperform it under certain conditions.
-To view the results of the FeedForward Neural Network (FFNN) and Neural Oblivious Decision Ensembles (NODE), run the deep_L.ipynb notebook in Google Colab.
+To view the results of the FeedForward Neural Network (FFNN) and Neural Oblivious Decision Ensembles (NODE), run the **deep_L.ipynb notebook** in Google Colab.
 Further details on the case study are available in the  report.
 
 
