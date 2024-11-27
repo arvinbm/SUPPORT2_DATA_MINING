@@ -97,6 +97,34 @@ Ensures necessary directories exist for saving visualizations:
 ```
 python data_classification.py
 ```
+**Arguments and Modes**
+  1. mode (Default: no_FElim)
+    - FElim: Perform feature elimination based on mutual information to select the top n features.
+    - no_FElim: Default mode where all features are used without elimination.
+  2. number_of_features or -n (Default: 6)
+    - Determines the number of top features to select when the mode is FElim. This option is ignored in no_FElim mode.
+
+  3. grid_searchXG or -g (Default: False)
+    - Runs grid search for hyperparameter tuning of the XGBoost model.
+
+**Examples** 
+  1. Use all features and evaluate multiple models (hyperprameters are speificed in clf_config.config)
+  ```
+  python data_classification.py
+  ```
+  2. Perform feature elimniation to select the top 8 features
+  ```
+  python data_classification.py --mode FElim -n 8
+  ```
+
+  3. Perform grid search for hyperparameter tuning of the XGBoost model:
+  ```
+  python data_classification.py -g
+  ```
+  4. Combine Feature Elimination and Grid Search:
+  ```
+  python data_classification.py --mode FElim -n 5 -g
+  ```
 
 ### Outputs:
 #### 5.1 ROC Curves:
