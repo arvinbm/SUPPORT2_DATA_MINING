@@ -1,4 +1,6 @@
 import pandas as pd
+from sklearn.feature_selection import mutual_info_classif
+
 import yaml
 
 """
@@ -101,3 +103,59 @@ def load_config(config_path):
     with open(config_path, 'r') as file:
         config = yaml.safe_load(file)  # Safely loads the YAML file, avoiding execution of arbitrary code
     return config
+
+
+
+
+def compute_and_mutual_information(X, y, random_state=42, plot=False):
+    """
+    Computes mutual information scores for features and optionally plots a histogram.
+
+    Parameters:
+        X (pd.DataFrame or np.ndarray): Feature matrix. If a DataFrame is provided, feature names are retained.
+        y (array-like): Target variable.
+        random_state (int): Random state for reproducibility. Default is 42.
+        plot (bool): Whether to plot a histogram of the mutual information scores. Default is False.
+
+    Returns:
+        pd.DataFrame: A sorted DataFrame with features and their mutual information scores.
+    """
+    from sklearn.feature_selection import mutual_info_classif
+    import pandas as pd
+    import matplotlib.pyplot as plt
+
+    # Compute mutual information
+    mi_scores = mutual_info_classif(X, y, random_state=random_state)
+
+    # Use feature names if X is a DataFrame; otherwise, generate default names
+    if isinstance(X, pd.DataFrame):
+        feature_names = X.columns
+    else:
+        feature_names = [f"Feature {i}" for i in range(X.shape[1])]
+
+    # Create a DataFrame for better interpretability
+    feature_importance = pd.DataFrame({
+        "Feature": feature_names,
+        "Mutual Information": mi_scores
+    }).sort_values(by="Mutual Information", ascending=False)
+
+
+    return feature_importance
+
+
+
+def plot_mutual_information(feature_importance):
+    """
+    Plots a histogram of mutual information scores.
+
+    Parameters:
+        feature_importance (pd.DataFrame): DataFrame with feature names and mutual information scores.
+    """
+    plt.figure(figsize=(10, 6))
+    plt.bar(feature_importance["Feature"], feature_importance["Mutual Information"], width=0.5)
+    plt.xlabel("Features")
+    plt.ylabel("Mutual Information Score")
+    plt.title("Mutual Information Scores for Features")
+    plt.xticks(rotation=45, ha='right')
+    plt.tight_layout()
+    plt.show()
