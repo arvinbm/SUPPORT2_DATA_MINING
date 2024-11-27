@@ -36,7 +36,7 @@ processed_data, y = get_processed_data(log_file)
 logger = setup_logger(log_file)
 
 folders = [
-    config["isolation_forest_folder"]
+    config["isolation_forest_folder"] , config['elliptic_envelope_folder']
 ]
 
 for folder in folders:
@@ -53,5 +53,14 @@ reduced_2d_dataset = perform_pca(processed_data)
 # Plotting the result of isolation forest outlier detection method
 logger.info("Plotting the results of the isolation forest outlier detection methods")
 plot_isolation_forest_results(isolation_forest_predictions, reduced_2d_dataset, config["isolation_forest_folder"])
+
+# Elliptic Envelope Outlier Detection Method
+
+logger.info("Starting the Elliptic Envelope Outlier Detection Method.")
+elliptic_envelope_predictions = apply_elliptic_envelope(processed_data, config["elliptic_envelope_params"]["contamination"])
+
+# Plotting the result of elliptic envelope outlier detection method
+logger.info("Plotting the results of the elliptic envelope outlier detection methods")
+plot_isolation_forest_results(elliptic_envelope_predictions, reduced_2d_dataset, config["elliptic_envelope_folder"])
 
 logger.info("Outlier detection script executed successfully. Logs saved in the specified folder.")
