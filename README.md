@@ -165,12 +165,12 @@ python outlier_detection.py
 ## Data Classification
 ### SVM (Radial Basis Function kernel)
 #### ROC for SVM
-<table>
+<table style="border: none; border-collapse: collapse;">
   <tr>
-    <td>
+    <td style="border: none;">
       <img src="./GitHub_Media/SVM_roc.png" alt="ROC for SVM" width="400">
     </td>
-    <td>
+    <td style="border: none; padding-left: 15px;">
       This is the ROC curve for the SVM model. It shows the trade-off between sensitivity and specificity.
     </td>
   </tr>
