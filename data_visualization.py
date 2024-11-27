@@ -18,10 +18,10 @@ saved to specified output directories, and provide insightful representations of
 """
 
 # Define the plots path
-plots_pie_charts_folder = "plots_pie_charts"
-plots_wordclouds_folder = "plots_wordcounts"
-plots_heatmap_folder = "plots_heatmap"
-plots_histogram_folder = "plots_histograms"
+plots_pie_charts_folder = "./plots/plots_pie_charts"
+plots_wordclouds_folder = "./plots/plots_wordcounts"
+plots_heatmap_folder = "./plots/plots_heatmap"
+plots_histogram_folder = "./plots/plots_histograms"
 
 # Ensure plots directory exits
 os.makedirs(plots_pie_charts_folder, exist_ok=True)
