@@ -27,12 +27,14 @@ pip install -r requirements.txt
 python data_preprocessing.py
 ```
 
-#### Outputs:
+### Outputs:
 #### 3.1.1 Logs:
+---
   - Logs all preprocessing steps, including handling missing values, feature splitting, normalization, and encoding.
   - File Location: `./logs/data_preprocessing_log/execution_log.txt`
 
 #### 3.1.2 Feature Logs:
+---
   - Logs details of numeric and categorical features in the dataset, including any dropped or encoded features.
 
   - File Locations:
@@ -40,22 +42,26 @@ python data_preprocessing.py
     - Categorical Features: `./logs/data_preprocessing_log/categorical_columns.csv`
     - Missing Values: `./logs/data_preprocessing_log/missing_values.csv`
 
-#### Key Features of the Preprocessing Pipeline:
+### Key Features of the Preprocessing Pipeline:
 
 #### 3.2.1 Dataset Import:
+---
   - Fetches the SUPPORT2 dataset from the UCI Machine Learning Repository.
 
 #### 3.2.2 Feature Analysis:
+---
   - Logs characteristics of dataset features, including:
     - Number of Missing Values
     - Data Types
     - Unique Values Per Feature
 
 #### 3.2.3 Handling Missing Data (Data Imputation):
+---
   - Removes columns with more than 30% missing values.
   - Imputes missing values using mean or mode based on feature type and class labels (death and hospdead).
 
 #### 3.2.4 Feature Engineering:
+---
   - Splits features into numerical and categorical subsets.
   - Applies one-hot encoding for categorical features.
   - Normalizes numerical features using z-score normalization.
