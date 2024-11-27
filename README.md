@@ -165,7 +165,7 @@ python outlier_detection.py
 ## Data Classification
 ### SVM (Radial Basis Function kernel)
 #### ROC for SVM
-![ROC for SVM](./logs/clf/roc_curves/SVM_roc.png)
+![ROC for SVM](./plots/clf/roc_curves/SVM_roc.png)
 ### Random Forest
 ### K-Nearest Neighbors
 ### XGBoost
