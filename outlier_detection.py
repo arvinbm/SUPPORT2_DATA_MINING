@@ -61,6 +61,6 @@ elliptic_envelope_predictions = apply_elliptic_envelope(processed_data, config["
 
 # Plotting the result of elliptic envelope outlier detection method
 logger.info("Plotting the results of the elliptic envelope outlier detection methods")
-plot_outlier_detection_results(elliptic_envelope_predictions, reduced_2d_dataset, config["elliptic_envelope_folder"])
+plot_outlier_detection_results(elliptic_envelope_predictions, reduced_2d_dataset, config["elliptic_envelope_folder"] , method = 'Elliptic Envelope')
 
 logger.info("Outlier detection script executed successfully. Logs saved in the specified folder.")
