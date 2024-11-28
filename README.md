@@ -2,7 +2,7 @@
 This repository provides a comprehensive data preprocessing pipeline for the SUPPORT2 dataset, sourced from the UCI Machine Learning Repository. 
 
 
-
+![poster](CMPT_459(Poster).jpg)
 
 ## Instructions to Run the SUPPORT2 Data Preprocessing Pipeline
 
