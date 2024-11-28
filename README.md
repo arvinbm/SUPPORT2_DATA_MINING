@@ -195,5 +195,8 @@ The goal is to determine whether XGBoost remains a superior model for tabular da
 To view the results of the FeedForward Neural Network (FFNN) and Neural Oblivious Decision Ensembles (NODE), run the **deep_L.ipynb notebook** in Google Colab.
 Further details on the case study are available in the  report.
 
+## Acknowledgments
+
+We wish to express our sincere appreciation to Professor Martin Ester and Arash Khoeini for their invaluable supervision and instruction throughout this project.
 
 ---
